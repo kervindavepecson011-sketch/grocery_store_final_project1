@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSMS - Fresh Dave Grocery Store Management System</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Overlay Background Image -->
+  <div class="bg-overlay"></div>
+
+  <!-- Main Container Wrapper -->
+  <div class="app-container">
+    
+    <!-- Header Navigation Bar -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-logo">
+          <i class="fa-solid me-2 fa-basket-shopping"></i>
+        </div>
+        <div>
+          <h1 class="brand-title">GSMS</h1>
+          <p class="brand-subtitle">Fresh Dave Grocery Store Management System</p>
+        </div>
+      </div>
+
+      <nav class="nav-pills">
+        <button class="nav-link active" onclick="switchTab('dashboard')" id="tab-btn-dashboard">
+          <i class="fa-solid fa-chart-line"></i> Dashboard
+        </button>
+        <button class="nav-link" onclick="switchTab('products')" id="tab-btn-products">
+          <i class="fa-solid fa-boxes-stacked"></i> Products
+        </button>
+        <button class="nav-link" onclick="switchTab('new-order')" id="tab-btn-new-order">
+          <i class="fa-solid fa-cart-plus"></i> New Order
+        </button>
+      </nav>
+    </header>
+
+    <!-- TAB 1: DASHBOARD / ORDERS OVERVIEW -->
+    <section id="view-dashboard" class="tab-content active">
+      <!-- Metric Cards -->
+      <div class="stats-grid">
+        <div class="stat-card primary">
+          <div class="stat-icon"><i class="fa-solid fa-peso-sign"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Total Revenue</span>
+            <h3 class="stat-value" id="stat-revenue">₱0.00</h3>
+          </div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-icon"><i class="fa-solid fa-receipt"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Total Orders</span>
+            <h3 class="stat-value" id="stat-orders">0</h3>
+          </div>
+        </div>
+        <div class="stat-card info">
+          <div class="stat-icon"><i class="fa-solid fa-box"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Active Products</span>
+            <h3 class="stat-value" id="stat-products">0</h3>
+          </div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-icon"><i class="fa-solid fa-chart-pie"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Avg. Order Value</span>
+            <h3 class="stat-value" id="stat-avg">₱0.00</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orders Section Header -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h2>Recent Orders</h2>
+            <p class="text-muted">Manage recent store receipts and transactional sales</p>
+          </div>
+          <div class="action-row">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="search-orders" placeholder="Search customer or order #..." onkeyup="filterOrders()">
+            </div>
+            <button class="btn btn-secondary" onclick="switchTab('products')">
+              <i class="fa-solid fa-boxes-stacked"></i> Manage Products
+            </button>
+            <button class="btn btn-primary" onclick="switchTab('new-order')">
+              <i class="fa-solid fa-plus"></i> New Order
+            </button>
+          </div>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date & Time</th>
+                <th>Order #</th>
+                <th>Customer Name</th>
+                <th class="text-right">Total Cost (PHP)</th>
+                <th class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" class="text-right font-bold">Total Grand Sales:</td>
+                <td class="text-right font-bold text-accent" id="dashboard-total-sum">₱0.00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: PRODUCT MANAGEMENT -->
+    <section id="view-products" class="tab-content">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h2>Manage Products</h2>
+            <p class="text-muted">Add, remove, or modify store inventory pricing and units</p>
+          </div>
+          <div class="action-row">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="search-products" placeholder="Search product name..." onkeyup="filterProducts()">
+            </div>
+            <button class="btn btn-primary" onclick="openAddProductModal()">
+              <i class="fa-solid fa-plus"></i> Add New Product
+            </button>
+          </div>
+        </div>
+
+        <!-- Products Table -->
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Unit of Measure</th>
+                <th class="text-right">Price Per Unit (PHP)</th>
+                <th class="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody id="products-table-body">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: CREATE NEW ORDER / POS -->
+    <section id="view-new-order" class="tab-content">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h2>New Order (POS)</h2>
+            <p class="text-muted">Register customer purchases and calculate billing</p>
+          </div>
+          <button class="btn btn-secondary" onclick="switchTab('dashboard')">
+            <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+          </button>
+        </div>
+
+        <form id="order-form" onsubmit="handleSaveOrder(event)">
+          <div class="form-group customer-input-group">
+            <label for="customer-name"><i class="fa-solid fa-user me-1"></i> Customer Name</label>
+            <input type="text" id="customer-name" class="form-control" placeholder="Enter customer name..." required>
+          </div>
+
+          <div class="order-items-wrapper">
+            <h3><i class="fa-solid fa-cart-flatbed"></i> Order Line Items</h3>
+            <div class="table-responsive">
+              <table class="data-table pos-table">
+                <thead>
+                  <tr>
+                    <th style="width: 35%;">Product</th>
+                    <th style="width: 20%;">Price (PHP)</th>
+                    <th style="width: 15%;">Quantity</th>
+                    <th style="width: 20%;" class="text-right">Total (PHP)</th>
+                    <th style="width: 10%;" class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="pos-items-body">
+                  <!-- Order Item Rows will be added dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pos-actions">
+              <button type="button" class="btn btn-outline" onclick="addPosRow()">
+                <i class="fa-solid fa-plus"></i> Add Item Line
+              </button>
+
+              <div class="grand-total-box">
+                <span class="label">Grand Total:</span>
+                <span class="amount" id="pos-grand-total">₱0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <button type="button" class="btn btn-secondary" onclick="switchTab('dashboard')">Cancel</button>
+            <button type="submit" class="btn btn-success btn-lg">
+              <i class="fa-solid fa-check"></i> Save & Complete Order
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODAL: ADD NEW PRODUCT -->
+  <div class="modal-backdrop" id="modal-add-product">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-box-archive"></i> Add New Product</h3>
+        <button class="close-btn" onclick="closeAddProductModal()">&times;</button>
+      </div>
+      <form onsubmit="handleSaveProduct(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="prod-name">Product Name</label>
+            <input type="text" id="prod-name" class="form-control" placeholder="e.g. Fresh Milk" required>
+          </div>
+          <div class="form-group">
+            <label for="prod-uom">Unit of Measure</label>
+            <select id="prod-uom" class="form-control" required>
+              <!-- Options populated dynamically -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="prod-price">Price Per Unit (PHP)</label>
+            <input type="number" step="0.01" min="0" id="prod-price" class="form-control" placeholder="₱ 0.00" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAddProductModal()">Close</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: VIEW ORDER DETAILS -->
+  <div class="modal-backdrop" id="modal-view-order">
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-receipt"></i> Order Details <span id="view-order-id-title">#0</span></h3>
+        <button class="close-btn" onclick="closeViewOrderModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="order-meta-info">
+          <div><strong>Customer:</strong> <span id="view-customer-name">-</span></div>
+          <div><strong>Date:</strong> <span id="view-order-date">-</span></div>
+        </div>
+        <div class="table-responsive mt-3">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Product Item</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th class="text-right">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody id="view-order-items-body">
+              <!-- Item rows -->
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-total-summary">
+          Total Amount Paid: <strong id="view-order-grand-total">₱0.00</strong>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeViewOrderModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom JavaScript Code -->
+  <script src="app.js"></script>
+</body>
+</html>
